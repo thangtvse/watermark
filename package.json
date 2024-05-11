@@ -1,0 +1,16 @@
+{
+  "name": "watermark",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^12.0.0",
+    "sharp": "^0.33.3"
+  },
+  "scripts": {
+    "test": "node main.js -i input -o output -w logo.png -g southeast -s 0.1"
+  }
+}
