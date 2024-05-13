@@ -43,7 +43,7 @@ const main = async () => {
           gravity: options.gravity
         }
       ])
-      .webp({ lossless: true })
+      .webp({ compressionLevel: 9 })
       .toFile(options.output + '/' + basename + '.webp')
   });
 }
