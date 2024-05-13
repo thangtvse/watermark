@@ -21,30 +21,35 @@ const main = async () => {
   const logo = sharp(options.watermark)
 
   fs.readdirSync(options.input).forEach(async (file) => {
-    const { width, height } = await sharp(options.input + '/' + file).metadata();
+    try {
+      const { width, height } = await sharp(options.input + '/' + file).metadata();
 
-    const ratio = logoWidth / logoHeight
-    const scaledLogoWidth = Math.round(Math.sqrt(width * height * options.scale * ratio))
-    const scaledLogoHeight = Math.round(scaledLogoWidth / ratio)
-
-    const basename = path.parse(file).name
-
-    const logoBuffer = await logo
-      .resize(scaledLogoWidth, scaledLogoHeight, {
-        fit: sharp.fit.inside
-      })
-      .toBuffer()
-
-    sharp(options.input + '/' + file)
-      .keepMetadata()
-      .composite([
-        {
-          input: logoBuffer,
-          gravity: options.gravity
-        }
-      ])
-      .webp({ compressionLevel: 9 })
-      .toFile(options.output + '/' + basename + '.webp')
+      const ratio = logoWidth / logoHeight
+      const scaledLogoWidth = Math.round(Math.sqrt(width * height * options.scale * ratio))
+      const scaledLogoHeight = Math.round(scaledLogoWidth / ratio)
+  
+      const basename = path.parse(file).name
+  
+      const logoBuffer = await logo
+        .resize(scaledLogoWidth, scaledLogoHeight, {
+          fit: sharp.fit.inside
+        })
+        .toBuffer()
+  
+      await sharp(options.input + '/' + file)
+        .keepMetadata()
+        .composite([
+          {
+            input: logoBuffer,
+            gravity: options.gravity
+          }
+        ])
+        .webp({ compressionLevel: 9 })
+        .toFile(options.output + '/' + basename + '.webp')
+    } catch (e) {
+      console.error('Cant\'t process file: ' + file)
+      console.error(e)
+    }
   });
 }
 
